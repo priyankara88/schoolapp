@@ -1,4 +1,4 @@
 export class UserEntity {
-  name: string;
-  email: string;
+  name: String;
+  email: String;
 }
