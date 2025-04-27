@@ -27,4 +27,10 @@ export class AuthController {
   async checkguard() {
     return 'checkguard';
   }
+
+  @Roles(Role.Admin)
+  @Get('check-role')
+  async checkrole() {
+    return 'check role';
+  }
 }

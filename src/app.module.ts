@@ -1,4 +1,10 @@
-import { Inject, Module } from '@nestjs/common';
+import {
+  Inject,
+  Logger,
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+} from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -6,6 +12,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from './config/configuration';
 import { MongooseModule } from '@nestjs/mongoose';
 import { JwtModule } from '@nestjs/jwt';
+import { LoggerMiddleware } from './Middleware/logger.middleware';
 
 @Module({
   imports: [
@@ -35,6 +42,10 @@ import { JwtModule } from '@nestjs/jwt';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, Logger],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}

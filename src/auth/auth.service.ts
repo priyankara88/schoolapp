@@ -12,6 +12,7 @@ import { LoginUserEntity } from './entities/login.user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUser } from './schemas/login.user.schema';
 import { v4 as uuidv4 } from 'uuid';
+import { log } from 'console';
 
 @Injectable()
 export class AuthService {
@@ -22,10 +23,12 @@ export class AuthService {
   ) {}
   async sginupuser(createuserdto): Promise<UserEntity> {
     const { name, email, password } = createuserdto;
+
     const IsUser = await this.userModal.findOne({ email: createuserdto.email });
-    console.log(26, IsUser);
 
     if (IsUser) {
+      console.log(123);
+
       throw new BadRequestException('User Alrady exist');
     }
 
@@ -61,7 +64,8 @@ export class AuthService {
   }
 
   async createjwtToken(userid) {
-    const payload = { userid, roles: ['admin'] };
+    //const payload = { userid, roles: ['admin'] };
+    const payload = { userid, roles: ['user'] };
     const token = this.jwtservice.sign(payload);
     const tokenreffresh = await this.createReffreshtoken(userid);
     return { token: token, reffreshtoken: tokenreffresh.reffreshtoken };
